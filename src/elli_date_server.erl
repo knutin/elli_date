@@ -26,8 +26,9 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
-    timer:send_interval(1000, update_date),
     elli_date = ets:new(elli_date, [named_table, protected]),
+    handle_info(update_date, #state{}),
+    timer:send_interval(1000, update_date),
     {ok, #state{}}.
 
 handle_call(_, _From, State) ->
