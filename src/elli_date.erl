@@ -45,3 +45,35 @@ rfc1123() ->
         [] ->
             <<"">>
     end.
+
+
+%%
+%% TESTS
+%%
+
+-ifdef(TEST).
+
+-include_lib("eunit/include/eunit.hrl").
+
+header_test() ->
+    Config = [
+              {callback, elli_middleware},
+              {callback_args,
+               [{mods, [
+                        {elli_date, []},
+                        {elli_example_callback, []}
+                        ]}]}
+              ],
+
+    ?assertEqual(undefined, whereis(elli_date_server)),
+    {ok, Head1, _} = Res1 = elli_test:call('GET', <<"/hello/world">>, [], <<>>, Config),
+    ?assertNotEqual(undefined, whereis(elli_date_server)),
+    Res2 = elli_test:call('GET', <<"/hello/world">>, [], <<>>, Config),
+
+    %% Will fail when we hit the change of second
+    ?assertEqual(Res1, Res2),
+
+    ?assertNotEqual(undefined, proplists:get_value(<<"Date">>, Head1)).
+
+
+-endif.
