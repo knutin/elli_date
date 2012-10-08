@@ -1,7 +1,7 @@
 {application, elli_date,
  [
   {description, "Elli middleware adding the Date header"},
-  {vsn, "1"},
+  {vsn, "1.1"},
   {registered, []},
   {applications, [
                   kernel,
